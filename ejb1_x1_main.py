@@ -50,22 +50,107 @@ from util_package.text_manager import TEXT, is_newline, is_space, remove_punctua
 
 def find_largest_word(text):
     # Write here your code
-    pass                
+     # Definim tres variables per a llargada màxima, paraula actual i paraula més llarga
+    max_len = 0
+    word = ""
+    largest_word = ""
+
+    for character in text:
+        # Si el caràcter no és ni un espai ni un salt de línia afegim el caràcter a la paraula
+        if not is_space(character) and not is_newline(character):
+            word += character
+
+        else:
+            if word != "":
+                # Eliminem els signes de puntuació
+                word = remove_punctuation_marks(word)
+                # Comparem llargada de la paraula amb llargada màxima
+                if len(word) > max_len:      
+                    max_len = len(word)
+                    largest_word = word
+
+                word = ""  # Reset a la paraula
+
+    # Comprovem la última paraula per si aquesta acaba sense salt de línia o sense espai
+    if word != "":
+        word = remove_punctuation_marks(word)
+
+        if len(word) > max_len:
+            largest_word = word
+
+    return largest_word              
 
 def is_palindrome_word(word):
     # Write here your code
-    pass
-    
+     # Igualar totes les lletres a minúscules i eliminar puntuació
+    word = remove_punctuation_marks(word).lower()
 
+    if len(word) == 0 or len(word) == 1:
+        return True
+    elif word[0] == word[-1]:
+        return is_palindrome_word(word[1:-1])
+    else:
+        return False    
 
 def count_palindrome_words(text):
     # Write here your code
-    pass
+    # Iniciem dues variables per a contar i per a paraula buida
+    contador = 0
+    word = ""
 
+    for character in text:
+        # Si el caràcter no és ni un espai ni un salt de línia afegim el caràcter a la paraula
+        if not is_space(character) and not is_newline(character):
+            word += character
+        else:
+            if word != "":
+                # Eliminem els signes de puntuació i passem a minúscules
+                word = remove_punctuation_marks(word).lower()
+                # Si és un palíndrom sumem 1
+                if word != "" and is_palindrome_word(word):
+                    contador += 1
+                # Buidem la paraula
+                word = ""
+    # Comprovem la última paraula del text.
+    if word != "":
+        word = remove_punctuation_marks(word).lower()
+        if word != "" and is_palindrome_word(word):
+            contador += 1
+
+    return contador
 
 def find_size_largest_sentence(text, filter):
     # Write here your code
-    pass
+     # Iniciem 2 variables per a llargada màxima i per a frase
+    # Indicador per trobar el filtre 
+    max_len = 0
+    sentence = ""
+    found = False
+
+    for character in text:
+        # Si no hi ha salt de línia afegim caràcter a la frase
+        if not is_newline(character):
+            sentence += character
+        else:
+            # Si hi ha filtre actualitzem llargada de la frase
+            if filter in sentence:
+                found = True
+                if len(sentence) > max_len:
+                    max_len = len(sentence)
+            # Buidem la frase
+            sentence = ""
+
+    # Última frase
+    if sentence != "":
+        if filter in sentence:
+            found = True
+            if len(sentence) > max_len:
+                max_len = len(sentence)
+
+    if not found:
+        raise ValueError
+
+    return max_len  
 
 
 # Si quieres probar tu código, descomenta las siguientes líneas y ejecuta el script
